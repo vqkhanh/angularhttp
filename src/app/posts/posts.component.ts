@@ -35,7 +35,7 @@ export class PostsComponent implements OnInit {
     post['title'] = input.value;
     input.value = '';
 
-    this.service.createPost(post)
+    this.service.create(post)
     .subscribe({
       next: (res: any) => {
         post['id'] = res.id;
@@ -58,7 +58,7 @@ export class PostsComponent implements OnInit {
   // }
 
   updatePost(post: any){
-    this.service.updatePost(post)
+    this.service.update(post)
     .subscribe({
       next: (res) => console.log("res:",res), // success path
       error:(error: AppError) => {
@@ -79,7 +79,7 @@ export class PostsComponent implements OnInit {
   // }
 
   deletePost(post: any){
-    this.service.deletePost(1345)
+    this.service.delete(1345)
     .subscribe({
       next: (res) => {
         console.log("123")
@@ -102,7 +102,7 @@ export class PostsComponent implements OnInit {
   // }
 
   ngOnInit(): void {
-    this.service.getPost()
+    this.service.getAll()
     .subscribe({
       next: (res) => this.posts = res, // success path
       error:(error: AppError) => {
@@ -114,5 +114,6 @@ export class PostsComponent implements OnInit {
       }, // error path
     });
   }
+
 
 }
