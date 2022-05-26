@@ -1,3 +1,5 @@
+import { NotFoundError } from './../common/not-found-error';
+import { AppError } from './../common/app-error';
 import { PostService } from './../services/post.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -42,12 +44,28 @@ export class PostsComponent implements OnInit {
       });
   }
 
+  // deletePost(post: any){
+  //   this.service.deletePost(post.id)
+  //     .subscribe(res =>{
+  //       const index = this.posts.indexOf(post);
+  //       this.posts.splice(index, 1);
+  //     });
+  // }
+
   deletePost(post: any){
     this.service.deletePost(post.id)
-      .subscribe(res =>{
+    .subscribe({
+      next: (res) => {
         const index = this.posts.indexOf(post);
-        this.posts.splice(index, 1);
-      });
+        this.posts.splice(index, 1);}, // success path
+      error:(error: AppError) => {
+        if (error instanceof NotFoundError){
+          alert("Not Found");
+        }else{
+          alert("Other error");
+        }
+      }, // error path
+    });
   }
 
   ngOnInit(): void {
