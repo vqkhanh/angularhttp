@@ -1,3 +1,4 @@
+import { BadInput } from './../common/bad-input';
 import { NotFoundError } from './../common/not-found-error';
 import { AppError } from './../common/app-error';
 import { HttpClient } from '@angular/common/http';
@@ -23,8 +24,22 @@ export class PostService {
     return this.httpClient.get(this.url);
   }
 
+  // createPost(post: any){
+  //   return this.httpClient.post(this.url, JSON.stringify(post));
+  // }
+
   createPost(post: any){
-    return this.httpClient.post(this.url, JSON.stringify(post));
+    return this.httpClient.post(this.url, JSON.stringify(post))
+    .pipe(
+      retry(3), // retry a failed request up to 3 times
+      catchError( (error: HttpErrorResponse) => {
+        return throwError(() => {
+          if(error.status === 400)
+            return throwError(() => new BadInput(error) )
+          return new AppError(error);
+        });
+      }) // then handle the error
+    );
   }
 
   updatePost(post: any){

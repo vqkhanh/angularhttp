@@ -1,3 +1,4 @@
+import { BadInput } from './../common/bad-input';
 import { NotFoundError } from './../common/not-found-error';
 import { AppError } from './../common/app-error';
 import { PostService } from './../services/post.service';
@@ -22,19 +23,40 @@ export class PostsComponent implements OnInit {
       
   }
 
-  createPost(input: HTMLInputElement){
+  // createPost(input: HTMLInputElement){
+  //   let post: any = {};
+  //   post['title'] = input.value;
+  //   // input.value = '';
 
+  //   this.service.createPost(post)
+  //     .subscribe( (res: any)  => {
+  //       post['id'] = res.id;
+  //       this.posts.splice(0, 0, post);
+  //       // this.posts.unshift(post);
+  //       input.value = '';
+  //     })
+  // }
+
+  createPost(input: HTMLInputElement){
     let post: any = {};
     post['title'] = input.value;
-    // input.value = '';
+    input.value = '';
 
     this.service.createPost(post)
-      .subscribe( (res: any)  => {
+    .subscribe({
+      next: (res: any) => {
         post['id'] = res.id;
         this.posts.splice(0, 0, post);
         // this.posts.unshift(post);
-        input.value = '';
-      })
+      }, // success path
+      error:(error: AppError) => {
+        if (error instanceof BadInput){
+          alert("Not Found");
+        }else{
+          alert("Other error");
+        }
+      }, // error path
+    });
   }
 
   updatePost(post: any){
@@ -60,9 +82,9 @@ export class PostsComponent implements OnInit {
         this.posts.splice(index, 1);}, // success path
       error:(error: AppError) => {
         if (error instanceof NotFoundError){
-          alert("Not Found");
+          alert("Bad request");
         }else{
-          alert("Other error");
+          alert("Unexpected error");
         }
       }, // error path
     });
