@@ -41,6 +41,14 @@ export class PostsComponent implements OnInit {
       });
   }
 
+  deletePost(post: any){
+    this.httpClient.delete(this.url + '/' + post.id)
+      .subscribe(res =>{
+        const index = this.posts.indexOf(post);
+        this.posts.splice(index, 1);
+      });
+  }
+
   ngOnInit(): void {
   }
 
