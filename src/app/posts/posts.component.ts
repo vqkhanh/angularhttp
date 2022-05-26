@@ -14,14 +14,7 @@ export class PostsComponent implements OnInit {
   posts: [] | any; 
   
 
-  constructor(private service: PostService) { 
-    this.service.getPost()
-      .subscribe(res => {
-        this.posts = res;
-      })
-
-      
-  }
+  constructor(private service: PostService) {}
 
   // createPost(input: HTMLInputElement){
   //   let post: any = {};
@@ -52,19 +45,30 @@ export class PostsComponent implements OnInit {
       error:(error: AppError) => {
         if (error instanceof BadInput){
           alert("Not Found");
-        }else{
-          alert("Other error");
-        }
+        }else throw error;
       }, // error path
     });
   }
 
+  // updatePost(post: any){
+  //   this.service.updatePost(post)
+  //     .subscribe(res =>{
+  //       console.log("res:",res);
+  //     });
+  // }
+
   updatePost(post: any){
     this.service.updatePost(post)
-      .subscribe(res =>{
-        console.log("res:",res);
-      });
+    .subscribe({
+      next: (res) => console.log("res:",res), // success path
+      error:(error: AppError) => {
+        if (error instanceof NotFoundError){
+          alert("Not Found");
+        }else throw error;
+      }, // error path
+    });
   }
+
 
   // deletePost(post: any){
   //   this.service.deletePost(post.id)
@@ -75,22 +79,40 @@ export class PostsComponent implements OnInit {
   // }
 
   deletePost(post: any){
-    this.service.deletePost(post.id)
+    this.service.deletePost(1345)
     .subscribe({
       next: (res) => {
+        console.log("123")
         const index = this.posts.indexOf(post);
         this.posts.splice(index, 1);}, // success path
       error:(error: AppError) => {
+        console.log("345")
         if (error instanceof NotFoundError){
           alert("Bad request");
-        }else{
-          alert("Unexpected error");
-        }
+        }else throw error;
       }, // error path
     });
   }
 
+  // ngOnInit(): void {
+  //   this.service.getPost()
+  //     .subscribe(res => {
+  //       this.posts = res;
+  //     })
+  // }
+
   ngOnInit(): void {
+    this.service.getPost()
+    .subscribe({
+      next: (res) => this.posts = res, // success path
+      error:(error: AppError) => {
+        if (error instanceof NotFoundError){
+          alert("Not ound.");
+        }else{
+          
+        }
+      }, // error path
+    });
   }
 
 }

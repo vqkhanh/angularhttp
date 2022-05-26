@@ -16,12 +16,23 @@ import { catchError, retry } from 'rxjs/operators';
 @Injectable()
 export class PostService {
 
-  private url = 'https://jsonplaceholder.typicode.com/posts';
+  private url = 'https://abcjsonplaceholder.typicode.com/posts';
 
   constructor(private httpClient: HttpClient) { }
 
   getPost(){
-    return this.httpClient.get(this.url);
+    //return this.httpClient.get(this.url);
+    return this.httpClient.get(this.url)
+    .pipe(
+      retry(3), // retry a failed request up to 3 times
+      catchError( (error: HttpErrorResponse) => {
+        return throwError(() => {
+          if(error.status === 404)
+            return throwError(() => new BadInput(error) )
+          return new AppError(error);
+        });
+      }) // then handle the error
+    );
   }
 
   // createPost(post: any){
@@ -75,6 +86,7 @@ export class PostService {
     // return throwError(() => new Error('Something bad happened; please try again later.'));
 
     return throwError(() => {
+      console.log("567")
       if(error.status === 404)
         return throwError(() => new NotFoundError() )
       return new AppError(error);
