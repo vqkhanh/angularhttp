@@ -34,6 +34,13 @@ export class PostsComponent implements OnInit {
       })
   }
 
+  updatePost(post: any){
+    this.httpClient.patch(this.url + '/' + post.id, JSON.stringify({isRead: true}))
+      .subscribe(res =>{
+        console.log("res:",res);
+      });
+  }
+
   ngOnInit(): void {
   }
 
