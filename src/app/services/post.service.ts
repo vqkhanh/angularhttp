@@ -11,7 +11,7 @@ export class PostService extends DataService {
 
 
   constructor(httpClient: HttpClient) {
-    super('https://jsonplaceholder.typicode.com/posts', httpClient);
+    super(httpClient);
    }
 
   

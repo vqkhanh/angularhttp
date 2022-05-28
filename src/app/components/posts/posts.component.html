@@ -1,0 +1,55 @@
+<form [formGroup]="form">
+    <div class="form-group row mt-5">
+        <label class="col-md-2 form-control-label text-md-right mt-2" for="">URL</label>
+        <div class="col-md-8 px-0">
+            <div class="input-group">
+                <input formControlName="urls" type="url" class="form-control ">
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button [disabled]="urls?.errors" (click)="random()" type="button" class="btn btn-primary btn-block"> Random </button>
+        </div>
+    </div>
+    <div class="row mt-0">
+        <div class="col-md-2" *ngIf="urls?.touched && urls?.invalid" ></div>
+        <div class="col-md-8 px-0" *ngIf="urls?.touched && urls?.invalid" class="alert alert-danger">
+            <div *ngIf="urls?.errors?.['required']">
+                URL is required.
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <div class="col-md-2"></div>
+        <textarea formControlName="description" class="form-control col-md-8" rows="10" type="text" ></textarea>
+    </div>
+
+    <div *ngIf="arrOcu.length > 0">
+        <div class="col-12 text-center text-primary font-weight-bold">
+            Top 10 most used words in the body of text
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-3"></div>
+            <div class="col-md-3 font-weight-bold bg-info border border-right text-center"> Word</div>
+            <div class="col-md-3 font-weight-bold bg-info border border-left text-center">Occurances</div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div *ngFor="let item of arrOcu; let odd = odd">
+                    <div class="row border" [class.bg-light]=" odd ">
+                        <div class="col-md-6 border-right text-center">
+                            <span>{{ item['word'] }}</span>
+                        </div>
+                        <div class="col-md-6 border-left text-center">
+                            <span>{{ item['occurances'] }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</form>
+
